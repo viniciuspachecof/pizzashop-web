@@ -7,6 +7,8 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link, useNavigate } from 'react-router';
 import { toast } from 'sonner';
+import { useMutation } from '@tanstack/react-query';
+import { registerRestaurant } from '@/api/register-restaurant';
 
 const signUpForm = z.object({
   restaurantName: z.string(),
@@ -29,17 +31,28 @@ export function SignUp() {
     resolver: zodResolver(signUpForm),
   });
 
+  const { mutateAsync: registerRestaurantFn } = useMutation({
+    mutationFn: registerRestaurant,
+  });
+
   async function handleSignUp(data: SignUpForm) {
-    console.log(data);
+    try {
+      await registerRestaurantFn({
+        restaurantName: data.restaurantName,
+        managerName: data.managerName,
+        email: data.email,
+        phone: data.phone,
+      });
 
-    await new Promise((resolve) => setTimeout(resolve, 3000));
-
-    toast.success('Restaurante cadstro com sucesso!', {
-      action: {
-        label: 'Login',
-        onClick: () => navigate('/sign-in'),
-      },
-    });
+      toast.success('Restaurante cadstro com sucesso!', {
+        action: {
+          label: 'Login',
+          onClick: () => navigate(`/sign-in?email=${data.email}`),
+        },
+      });
+    } catch {
+      toast.error('Erro ao cadastrar restaurante');
+    }
   }
 
   return (
@@ -57,11 +70,6 @@ export function SignUp() {
           </div>
           <form className="space-y-4" onSubmit={handleSubmit(handleSignUp)}>
             <div className="space-y-2">
-              <Label htmlFor="email">Seu e-mail</Label>
-              <Input id="email" type="email" {...register('email')} />
-            </div>
-
-            <div className="space-y-2">
               <Label htmlFor="restaurantName">Nome do estabelecimento</Label>
               <Input id="restaurantName" type="text" {...register('restaurantName')} />
             </div>
@@ -69,6 +77,11 @@ export function SignUp() {
             <div className="space-y-2">
               <Label htmlFor="managerName">Seu nome</Label>
               <Input id="managerName" type="text" {...register('managerName')} />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="email">Seu e-mail</Label>
+              <Input id="email" type="email" {...register('email')} />
             </div>
 
             <div className="space-y-2">
