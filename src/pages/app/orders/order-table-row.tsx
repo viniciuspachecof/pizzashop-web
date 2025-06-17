@@ -85,7 +85,7 @@ export function OrderTableRow({ order }: OrderTableRowProps) {
       <TableCell>
         <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
           <DialogTrigger asChild>
-            <Button variant="outline" size="xs">
+            <Button variant="outline" size="xs" className="cursor-pointer">
               <Search className="h-3 w-3" />
               <span className="sr-only">Detalhes do pedido</span>
             </Button>
