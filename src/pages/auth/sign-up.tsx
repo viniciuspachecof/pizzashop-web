@@ -44,14 +44,14 @@ export function SignUp() {
         phone: data.phone,
       });
 
-      toast.success('Restaurante cadstro com sucesso!', {
+      toast.success('Restaurante cadastrado com sucesso.', {
         action: {
           label: 'Login',
           onClick: () => navigate(`/sign-in?email=${data.email}`),
         },
       });
     } catch {
-      toast.error('Erro ao cadastrar restaurante');
+      toast.error('Erro ao cadastrar restaurante.');
     }
   }
 
